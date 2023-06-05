@@ -1,0 +1,43 @@
+{# templates/base.html #}
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <title>{{ title }}</title>
+
+</head>
+
+
+<body>
+
+  <h1>Welcome to {{ title }}!</h1>
+
+</body>
+
+<button onclick="getReq('/print')">Scan</button> 
+<a href="{{url_for('mergePdf')}}">Download</a>
+<button onclick="getReq('/download')">Download</button>
+<button onclick="getReq('/clear')">Clear</button>
+
+</html>
+
+
+<script>
+    function myFunction() {
+      document.getElementById("demo").style.color = "red";
+    }
+
+    function getReq(theUrl){
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+    
+    </script>
