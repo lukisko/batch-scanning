@@ -9,20 +9,19 @@
 
   <meta charset="utf-8">
 
-  <title>{{ title }}</title>
+  <title>batch scanning</title>
 
 </head>
 
 
 <body>
 
-  <h1>Welcome to {{ title }}!</h1>
+  <h1>Welcome to our page for batch scanning!</h1>
 
 </body>
 
 <button onclick="getReq('/print')">Scan</button> 
 <a href="{{url_for('mergePdf')}}">Download</a>
-<button onclick="getReq('/download')">Download</button>
 <button onclick="getReq('/clear')">Clear</button>
 
 </html>

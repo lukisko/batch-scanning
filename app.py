@@ -11,7 +11,7 @@ printer_url = 'http://192.168.1.3'
 
 @app.route("/")
 def home():
-    return render_template("index.html", title="Jinja and Flask")
+    return render_template("index.html")
 
 @app.route("/print", methods=['GET'])
 def scan():
