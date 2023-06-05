@@ -1,3 +1,4 @@
 .venv
 scans/input/*
 scans/output/*
+__pycache__
