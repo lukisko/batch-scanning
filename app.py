@@ -44,7 +44,7 @@ def mergePdf():
     merger = PdfMerger()
     
     inputFiles = pathlib.Path('scans/input')
-    for item in inputFiles.iterdir():
+    for item in sorted(inputFiles.iterdir(), reverse=True):
         if item.is_file():
             print(item)
             merger.merge(0,item)

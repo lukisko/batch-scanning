@@ -2,3 +2,4 @@
 scans/input/*
 scans/output/*
 __pycache__
+*.log
