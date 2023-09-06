@@ -7,5 +7,5 @@
 # additional requirements
 - handle error from scanner
 - handle empty files
-- make correct order of pages (in case of pages over 10)
+- make correct order of pages (in case of pages over 10) - fixed in the newest version
 - able to remove the last page

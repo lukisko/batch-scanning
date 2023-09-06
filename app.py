@@ -4,10 +4,13 @@ import requests
 from PyPDF2 import PdfMerger
 import pathlib
 import os
+import printer_config
+from interfaces import printer_interface
+from datetime import datetime
 
 app = Flask(__name__)
 
-printer_url = 'http://192.168.1.3'
+printer_url = 'http://192.168.1.13'
 
 @app.route("/")
 def home():
@@ -15,29 +18,16 @@ def home():
 
 @app.route("/print", methods=['GET'])
 def scan():
-    startScanning()
-    jobNumber = getLatestJobNumber()
+    my_printer = printer_config.HP_officeJet_pro_9010
+    jobNumber = my_printer.make_scan_job()
     
-    response = requests.get(printer_url + '/Scan/Jobs/'+ str(jobNumber) +'/Pages/1')
+    response = my_printer.wait_and_get_scan(jobNumber)
     print(response.status_code)
     
-    with open("scans/input/scan-"+ jobNumber +".pdf","wb") as bin_file:
+    with open("scans/input/scan-"+ str(datetime.now()) +".pdf","wb") as bin_file:
         bin_file.write(response.content)
-        
-    
     
     return "Hello, Flask!"
-
-def startScanning():
-    response = requests.post(printer_url + '/Scan/Jobs', data= '<scan:ScanJob xmlns:scan="http://www.hp.com/schemas/imaging/con/cnx/scan/2008/08/19" xmlns:dd="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/"><scan:XResolution>300</scan:XResolution><scan:YResolution>300</scan:YResolution><scan:XStart>0</scan:XStart><scan:YStart>0</scan:YStart><scan:Width>2480</scan:Width><scan:Height>3508</scan:Height><scan:Format>Pdf</scan:Format><scan:CompressionQFactor>25</scan:CompressionQFactor><scan:ColorSpace>Color</scan:ColorSpace><scan:BitDepth>8</scan:BitDepth><scan:InputSource>Platen</scan:InputSource><scan:GrayRendering>NTSC</scan:GrayRendering><scan:ToneMap><scan:Gamma>0</scan:Gamma><scan:Brightness>1000</scan:Brightness><scan:Contrast>1000</scan:Contrast><scan:Highlite>0</scan:Highlite><scan:Shadow>0</scan:Shadow></scan:ToneMap><scan:ContentType>Document</scan:ContentType></scan:ScanJob>')
-    print(response.status_code)
-    
-def getLatestJobNumber():
-    response = requests.get(printer_url + "/Jobs/JobList")
-    root = ET.fromstring(response.text)
-    jobUrl = root[-1][0].text
-    jobNumber = jobUrl.split('/')[-1]
-    return jobNumber
 
 @app.route("/download", methods=['GET'])
 def mergePdf():
@@ -61,4 +51,13 @@ def cleanInput():
         if item.is_file():
             print(item)
             os.remove(item)
+    return "remove done"
+
+@app.route("/clearLast", methods=['GET'])
+def cleanLastInput():
+    inputFiles = pathlib.Path('scans/input')
+    fileToRemove = max(inputFiles.iterdir())
+    if fileToRemove.is_file():
+        print(fileToRemove)
+        os.remove(fileToRemove)
     return "remove done"
